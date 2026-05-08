@@ -1,5 +1,30 @@
 export type UserRole = "owner" | "kepala_toko" | "kepala_gudang";
 
+export type MovementCategory = "fast_moving" | "slow_moving" | "non_moving";
+
+export type Category = {
+  id: string;
+  name: string;
+  created_at: string;
+};
+
+export type Product = {
+  id: string;
+  sku: string;
+  name: string;
+  category_id: string | null;
+  category: Category | null;
+  buy_price: number;
+  sell_price: number;
+  stock: number;
+  safety_stock: number;
+  movement_category: MovementCategory;
+  description: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+};
+
 export type Profile = {
   id: string;
   full_name: string;
@@ -46,6 +71,38 @@ export type Database = {
         Update: Partial<{
           is_read: boolean;
         }>;
+      };
+      categories: {
+        Row: Category;
+        Insert: Omit<Category, "id" | "created_at"> & { created_at?: string };
+        Update: Partial<Omit<Category, "id">>;
+      };
+      products: {
+        Row: Omit<Product, "category">;
+        Insert: Omit<Product, "id" | "category" | "created_at" | "updated_at"> & {
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: Partial<Omit<Product, "id" | "category" | "created_at">>;
+      };
+      stock_movements: {
+        Row: {
+          id: string;
+          product_id: string;
+          user_id: string;
+          type: "in" | "out" | "adjustment";
+          quantity: number;
+          note: string | null;
+          created_at: string;
+        };
+        Insert: {
+          product_id: string;
+          user_id: string;
+          type: "in" | "out" | "adjustment";
+          quantity: number;
+          note?: string | null;
+        };
+        Update: never;
       };
       audit_logs: {
         Row: {
