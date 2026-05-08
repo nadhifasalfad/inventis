@@ -2,27 +2,24 @@
 
 import { toggleProductActive } from "./actions";
 import { EditStockDialog } from "./edit-stock-dialog";
+import { StockHistoryDialog } from "./stock-history-dialog";
 import { cn } from "@/lib/utils";
 import type { Product, UserRole } from "@/lib/supabase/types";
 
 const MOVEMENT_LABEL: Record<string, string> = {
   fast_moving: "Fast Moving",
+  medium_moving: "Medium Moving",
   slow_moving: "Slow Moving",
-  non_moving: "Non Moving",
 };
 
 const MOVEMENT_CLASS: Record<string, string> = {
   fast_moving: "bg-green-500/10 text-green-700 dark:text-green-400",
-  slow_moving: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
-  non_moving: "bg-red-500/10 text-red-700 dark:text-red-400",
+  medium_moving: "bg-yellow-500/10 text-yellow-700 dark:text-yellow-400",
+  slow_moving: "bg-orange-500/10 text-orange-700 dark:text-orange-400",
 };
 
 function formatRupiah(n: number) {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    maximumFractionDigits: 0,
-  }).format(n);
+  return "Rp " + new Intl.NumberFormat("id-ID", { maximumFractionDigits: 0 }).format(n);
 }
 
 type Props = {
@@ -64,8 +61,8 @@ export function ProductsTable({ products, role }: Props) {
         </thead>
         <tbody className="divide-y divide-border">
           {products.map((p) => {
-            const lowStock = p.stock <= p.safety_stock && p.stock > 0;
-            const outOfStock = p.stock === 0;
+            const lowStock = p.current_stock <= p.safety_stock && p.current_stock > 0;
+            const outOfStock = p.current_stock === 0;
 
             return (
               <tr key={p.id} className="hover:bg-muted/30 transition-colors">
@@ -92,9 +89,9 @@ export function ProductsTable({ products, role }: Props) {
                   </span>
                 </td>
                 {isKepalaToko && (
-                  <td className="px-4 py-3 text-right tabular-nums">{formatRupiah(p.buy_price)}</td>
+                  <td className="px-4 py-3 text-right tabular-nums">{formatRupiah(p.purchase_price)}</td>
                 )}
-                <td className="px-4 py-3 text-right tabular-nums">{formatRupiah(p.sell_price)}</td>
+                <td className="px-4 py-3 text-right tabular-nums">{formatRupiah(p.selling_price)}</td>
                 <td className="px-4 py-3 text-right tabular-nums">
                   <span
                     className={cn(
@@ -106,7 +103,7 @@ export function ProductsTable({ products, role }: Props) {
                           : "text-foreground",
                     )}
                   >
-                    {p.stock}
+                    {p.current_stock}
                   </span>
                   {lowStock && !outOfStock && (
                     <span className="ml-1 text-xs text-yellow-600 dark:text-yellow-400">(rendah)</span>
@@ -130,6 +127,7 @@ export function ProductsTable({ products, role }: Props) {
                 {canEditStock && (
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-2">
+                      <StockHistoryDialog productId={p.id} productName={p.name} />
                       <EditStockDialog product={p} />
                       {isKepalaToko && (
                         <form

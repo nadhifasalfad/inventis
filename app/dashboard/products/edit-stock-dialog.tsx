@@ -45,7 +45,7 @@ export function EditStockDialog({ product }: { product: Product }) {
           <div className="flex-1 min-w-0">
             <DialogTitle>Edit Stok</DialogTitle>
             <DialogDescription>
-              {product.name} &mdash; Stok saat ini: <strong>{product.stock}</strong>
+              {product.name} &mdash; Stok saat ini: <strong>{product.current_stock}</strong>
             </DialogDescription>
           </div>
           <DialogCloseButton />
@@ -67,7 +67,7 @@ export function EditStockDialog({ product }: { product: Product }) {
                 name="new_stock"
                 type="number"
                 min={0}
-                defaultValue={product.stock}
+                defaultValue={product.current_stock}
                 required
               />
             </div>

@@ -11,8 +11,8 @@ import type { Category } from "@/lib/supabase/types";
 
 const MOVEMENT_OPTIONS = [
   { value: "fast_moving", label: "Fast Moving" },
+  { value: "medium_moving", label: "Medium Moving" },
   { value: "slow_moving", label: "Slow Moving" },
-  { value: "non_moving", label: "Non Moving" },
 ];
 
 type ActionState = { error?: string; success?: boolean } | undefined;
@@ -88,21 +88,21 @@ export function AddProductForm({
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="buy_price">Harga Beli</Label>
-            <RupiahInput id="buy_price" name="buy_price" defaultValue={0} required />
+            <Label htmlFor="purchase_price">Harga Beli</Label>
+            <RupiahInput id="purchase_price" name="purchase_price" defaultValue={0} required />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="sell_price">Harga Jual</Label>
-            <RupiahInput id="sell_price" name="sell_price" defaultValue={0} required />
+            <Label htmlFor="selling_price">Harga Jual</Label>
+            <RupiahInput id="selling_price" name="selling_price" defaultValue={0} required />
           </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="stock">Stok Awal</Label>
+            <Label htmlFor="current_stock">Stok Awal</Label>
             <Input
-              id="stock"
-              name="stock"
+              id="current_stock"
+              name="current_stock"
               type="number"
               min={0}
               defaultValue={0}

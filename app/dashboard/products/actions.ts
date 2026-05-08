@@ -2,7 +2,15 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createAdminClient } from "@supabase/supabase-js";
 import type { MovementCategory } from "@/lib/supabase/types";
+
+function getAdminClient() {
+  return createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  );
+}
 
 export async function createProduct(_prevState: unknown, formData: FormData) {
   const supabase = await createClient();
@@ -15,47 +23,36 @@ export async function createProduct(_prevState: unknown, formData: FormData) {
   const sku = (formData.get("sku") as string).trim();
   const name = (formData.get("name") as string).trim();
   const category_id = (formData.get("category_id") as string) || null;
-  const buy_price = Number(formData.get("buy_price"));
-  const sell_price = Number(formData.get("sell_price"));
-  const stock = Number(formData.get("stock"));
+  const purchase_price = Number(formData.get("purchase_price"));
+  const selling_price = Number(formData.get("selling_price"));
+  const current_stock = Number(formData.get("current_stock"));
   const safety_stock = Number(formData.get("safety_stock"));
   const movement_category = formData.get("movement_category") as MovementCategory;
   const description = (formData.get("description") as string).trim() || null;
 
   if (!sku || !name) return { error: "SKU dan nama wajib diisi." };
-  if (buy_price < 0 || sell_price < 0) return { error: "Harga tidak boleh negatif." };
-  if (stock < 0 || safety_stock < 0) return { error: "Stok tidak boleh negatif." };
+  if (purchase_price < 0 || selling_price < 0) return { error: "Harga tidak boleh negatif." };
+  if (current_stock < 0 || safety_stock < 0) return { error: "Stok tidak boleh negatif." };
 
-  const { data: product, error } = await supabase
+  const { error } = await supabase
     .from("products")
     .insert({
       sku,
       name,
       category_id,
-      buy_price,
-      sell_price,
-      stock,
+      purchase_price,
+      selling_price,
+      current_stock,
       safety_stock,
       movement_category,
       description,
       is_active: true,
-    })
-    .select("id")
-    .single();
+      created_by: user.id,
+    });
 
   if (error) {
     if (error.code === "23505") return { error: "SKU sudah digunakan. Gunakan SKU lain." };
-    return { error: `[${error.code}] ${error.message}` };
-  }
-
-  if (stock > 0) {
-    await supabase.from("stock_movements").insert({
-      product_id: product.id,
-      user_id: user.id,
-      type: "in",
-      quantity: stock,
-      note: "Stok awal",
-    });
+    return { error: "Gagal menyimpan barang. Coba lagi." };
   }
 
   revalidatePath("/dashboard/products");
@@ -72,40 +69,52 @@ export async function updateStock(_prevState: unknown, formData: FormData) {
 
   const product_id = formData.get("product_id") as string;
   const new_stock = Number(formData.get("new_stock"));
-  const note = (formData.get("note") as string).trim() || null;
+  const note = (formData.get("note") as string | null)?.trim() || null;
 
   if (!product_id) return { error: "ID barang tidak valid." };
   if (new_stock < 0) return { error: "Stok tidak boleh negatif." };
 
-  const { data: product, error: fetchError } = await supabase
+  const { data: current, error: fetchErr } = await supabase
     .from("products")
-    .select("stock")
+    .select("current_stock")
     .eq("id", product_id)
     .single();
 
-  if (fetchError || !product) return { error: "Barang tidak ditemukan." };
+  if (fetchErr || !current) return { error: "Barang tidak ditemukan." };
 
-  const diff = new_stock - (product as { stock: number }).stock;
+  const old_stock = (current as { current_stock: number }).current_stock;
 
   const { error } = await supabase
     .from("products")
-    .update({ stock: new_stock })
+    .update({ current_stock: new_stock })
     .eq("id", product_id);
 
   if (error) return { error: "Gagal memperbarui stok. Coba lagi." };
 
-  if (diff !== 0) {
-    await supabase.from("stock_movements").insert({
-      product_id,
-      user_id: user.id,
-      type: "adjustment",
-      quantity: Math.abs(diff),
-      note: note ?? (diff > 0 ? "Penambahan stok" : "Pengurangan stok"),
-    });
-  }
+  await getAdminClient().from("audit_logs").insert({
+    user_id: user.id,
+    action: "STOCK_UPDATE",
+    table_name: "products",
+    record_id: product_id,
+    old_data: { current_stock: old_stock },
+    new_data: { current_stock: new_stock, note },
+  });
 
   revalidatePath("/dashboard/products");
   return { success: true };
+}
+
+export async function getStockHistory(productId: string) {
+  const { data } = await getAdminClient()
+    .from("audit_logs")
+    .select("id, created_at, old_data, new_data, user:profiles(full_name)")
+    .eq("table_name", "products")
+    .eq("action", "STOCK_UPDATE")
+    .eq("record_id", productId)
+    .order("created_at", { ascending: false })
+    .limit(50);
+
+  return data ?? [];
 }
 
 export async function toggleProductActive(productId: string, currentActive: boolean) {

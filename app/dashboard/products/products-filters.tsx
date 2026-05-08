@@ -8,8 +8,8 @@ import type { Category } from "@/lib/supabase/types";
 const MOVEMENT_OPTIONS = [
   { value: "", label: "Semua Kategori Gerak" },
   { value: "fast_moving", label: "Fast Moving" },
+  { value: "medium_moving", label: "Medium Moving" },
   { value: "slow_moving", label: "Slow Moving" },
-  { value: "non_moving", label: "Non Moving" },
 ];
 
 const STATUS_OPTIONS = [
@@ -20,7 +20,7 @@ const STATUS_OPTIONS = [
 
 const SORT_OPTIONS = [
   { value: "name", label: "Nama" },
-  { value: "stock", label: "Stok" },
+  { value: "current_stock", label: "Stok" },
   { value: "created_at", label: "Tanggal Dibuat" },
 ];
 
