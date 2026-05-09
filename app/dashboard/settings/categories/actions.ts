@@ -21,7 +21,7 @@ export async function createCategory(_prevState: unknown, formData: FormData) {
     return { error: "Gagal menyimpan kategori. Coba lagi." };
   }
 
-  revalidatePath("/dashboard/settings");
+  revalidatePath("/dashboard/settings/categories");
   return { success: true };
 }
 
@@ -33,7 +33,6 @@ export async function deleteCategory(categoryId: string) {
 
   if (!user) return { error: "Sesi tidak valid." };
 
-  // Check if category is in use
   const { count } = await supabase
     .from("products")
     .select("id", { count: "exact", head: true })
@@ -52,6 +51,6 @@ export async function deleteCategory(categoryId: string) {
 
   if (error) return { error: "Gagal menghapus kategori. Coba lagi." };
 
-  revalidatePath("/dashboard/settings");
+  revalidatePath("/dashboard/settings/categories");
   return { success: true };
 }

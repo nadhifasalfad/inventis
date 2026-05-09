@@ -29,7 +29,6 @@ export default async function DashboardLayout({
     .single();
 
   if (!profile || !profile.is_active) {
-    await supabase.auth.signOut();
     redirect("/login?error=inactive");
   }
 

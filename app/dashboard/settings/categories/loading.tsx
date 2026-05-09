@@ -1,9 +1,9 @@
-export default function SettingsLoading() {
+export default function CategoriesLoading() {
   return (
-    <div className="space-y-8 max-w-2xl animate-pulse">
+    <div className="space-y-6 max-w-2xl animate-pulse">
       <div className="space-y-2">
-        <div className="h-7 w-28 rounded-md bg-muted" />
-        <div className="h-4 w-56 rounded-md bg-muted" />
+        <div className="h-7 w-36 rounded-md bg-muted" />
+        <div className="h-4 w-64 rounded-md bg-muted" />
       </div>
 
       <div className="rounded-xl border border-border bg-card">

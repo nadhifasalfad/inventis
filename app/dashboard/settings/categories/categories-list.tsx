@@ -6,11 +6,7 @@ import { deleteCategory } from "./actions";
 import { cn } from "@/lib/utils";
 import type { Category } from "@/lib/supabase/types";
 
-export function CategoriesList({
-  categories,
-}: {
-  categories: Category[];
-}) {
+export function CategoriesList({ categories }: { categories: Category[] }) {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [pending, setPending] = useState<Record<string, boolean>>({});
 
@@ -25,7 +21,6 @@ export function CategoriesList({
       setErrors((e) => ({ ...e, [id]: result.error! }));
       setPending((p) => ({ ...p, [id]: false }));
     }
-    // on success, revalidatePath refreshes the list automatically
   }
 
   if (categories.length === 0) {
