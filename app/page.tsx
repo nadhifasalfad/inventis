@@ -103,7 +103,7 @@ export default function Home() {
             </div>
             <div className="space-y-3">
               {[
-                { rank: 1, nama: "Jersey Olahraga Premium", skor: "87.4%" },
+                { rank: 1, nama: "Jersey Olahraga Premium", skor: "81%" },
                 { rank: 2, nama: "Sepatu Badminton Pro", skor: "74.1%" },
                 { rank: 3, nama: "Tas Olahraga XL", skor: "61.8%" },
               ].map((item) => (

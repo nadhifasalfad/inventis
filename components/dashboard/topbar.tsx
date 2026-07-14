@@ -60,9 +60,9 @@ export function Topbar({ onMenuToggle }: { onMenuToggle?: () => void }) {
 
       <div className="flex items-center gap-2">
         {/* Notification bell */}
-        <Button variant="ghost" size="icon" className="relative">
+        {/* <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-4 w-4" />
-        </Button>
+        </Button> */}
 
         <ThemeToggle />
 
