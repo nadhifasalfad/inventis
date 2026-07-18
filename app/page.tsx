@@ -74,7 +74,7 @@ export default function Home() {
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground">
               Bantu pemilik toko mengambil keputusan restocking yang optimal —
-              berdasarkan data penjualan, harga, margin, dan pergerakan barang
+              berdasarkan tingkat penjualan, stok tersisa, harga modal, dan margin keuntungan
               secara real-time.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -141,8 +141,7 @@ export default function Home() {
               ))}
             </div>
             <p className="mt-4 text-center text-xs text-muted-foreground">
-              Berdasarkan kriteria: Penjualan · Harga · Margin · Pergerakan
-              Barang
+              Berdasarkan kriteria: Tingkat Penjualan · Stok Tersisa · Harga Modal · Margin Keuntungan
             </p>
           </div>
         </section>
@@ -210,7 +209,7 @@ export default function Home() {
             {[
               {
                 label: "Kalkulasi TOPSIS",
-                desc: "Hitung skor prioritas setiap barang berdasarkan kriteria yang dapat dikustomisasi — penjualan, harga, margin, dan kategori pergerakan.",
+                desc: "Hitung skor prioritas setiap barang berdasarkan kriteria yang dapat dikustomisasi — tingkat penjualan, stok tersisa, harga modal, dan margin keuntungan.",
               },
               {
                 label: "Priority Ranking",
