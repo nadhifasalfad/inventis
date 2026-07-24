@@ -48,7 +48,7 @@ export function ProductsTable({ products, role }: Props) {
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">SKU</th>
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">Nama Barang</th>
               <th className="px-4 py-3 text-left font-medium text-muted-foreground">Kategori</th>
-              <th className="px-4 py-3 text-left font-medium text-muted-foreground">KKlasifikasi Barang</th>
+              <th className="px-4 py-3 text-left font-medium text-muted-foreground">Klasifikasi Barang</th>
               {isKepalaToko && (
                 <th className="px-4 py-3 text-right font-medium text-muted-foreground">Harga Beli</th>
               )}
