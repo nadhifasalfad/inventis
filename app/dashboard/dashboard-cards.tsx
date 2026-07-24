@@ -227,7 +227,7 @@ export function DashboardCards({
             <tr className="border-b border-border bg-muted/30">
               <Th className="text-left">Produk</Th>
               <Th className="text-right">Stok</Th>
-              <Th className="text-center">Kategori Gerak</Th>
+              <Th className="text-center">Klasifikasi Barang</Th>
             </tr>
           </thead>
           <tbody>

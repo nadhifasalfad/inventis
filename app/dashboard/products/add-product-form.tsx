@@ -70,7 +70,7 @@ export function AddProductForm({
             </select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="movement_category">Kategori Gerak</Label>
+            <Label htmlFor="movement_category">Klasifikasi Barang</Label>
             <select
               id="movement_category"
               name="movement_category"

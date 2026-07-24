@@ -6,7 +6,7 @@ import { Search } from "lucide-react";
 import type { Category } from "@/lib/supabase/types";
 
 const MOVEMENT_OPTIONS = [
-  { value: "", label: "Semua Kategori Gerak" },
+  { value: "", label: "Semua Klasifikasi Barang" },
   { value: "fast_moving", label: "Fast Moving" },
   { value: "medium_moving", label: "Medium Moving" },
   { value: "slow_moving", label: "Slow Moving" },
